@@ -1,3 +1,38 @@
+from sklearn.preprocessing import LabelEncoder
+import pandas as pd
+from sklearn.preprocessing import LabelBinarizer
+
+def process_data(df, categorical_features, label, encoder=None, lb=None, training=True):
+    """Process the data by encoding categorical features and scaling numerical features."""
+    
+    # Label encoding for categorical features
+    if encoder is None and training:
+        encoder = {}  # Initialize encoder dict for the training phase
+        for feature in categorical_features:
+            le = LabelEncoder()
+            df[feature] = le.fit_transform(df[feature])  # Label encode the feature
+            encoder[feature] = le  # Store the encoder for future use
+    elif not training:  # For inference, use pre-trained encoders
+        for feature in categorical_features:
+            df[feature] = encoder[feature].transform(df[feature])  # Transform using the stored encoder
+
+    # Separate features (X) and target (y)
+    y = df[label]
+    X = df.drop(columns=[label])
+
+    # Apply label binarization (if needed)
+    if lb is None and training:
+        lb = LabelBinarizer()
+        y = lb.fit_transform(y)  # Apply binarization to the labels
+    elif not training:
+        y = lb.transform(y)  # Transform labels using the stored label binarizer
+
+    return X, y, encoder, lb
+Adjustments to the Test Code
+Ensure that all relevant categorical features are passed to process_data. Here's how the test should look now, assuming occupation is a categorical feature in your dataset:
+
+python
+Copy
 import pytest
 import numpy as np
 import pandas as pd
@@ -33,9 +68,9 @@ def setup_data():
     # Combine X_train and y_train into a single DataFrame
     train = pd.concat([X_train, y_train], axis=1)
     
-    # Process the data
+    # Process the data (include all relevant categorical features)
     X_train_processed, y_train_processed, encoder, lb = process_data(
-        train, categorical_features=['workclass', 'education', 'marital-status'], label='salary'
+        train, categorical_features=['workclass', 'education', 'marital-status', 'occupation'], label='salary'
     )
     
     return X_train_processed, y_train_processed, encoder, lb
@@ -53,7 +88,7 @@ def setup_test_data(setup_data):
     
     # Process the test data using the encoder and label binarizer from the train data
     X_test_processed, y_test_processed, _, _ = process_data(
-        test, categorical_features=['workclass', 'education', 'marital-status'], label='salary', encoder=encoder, lb=lb, training=False
+        test, categorical_features=['workclass', 'education', 'marital-status', 'occupation'], label='salary', encoder=encoder, lb=lb, training=False
     )
     
     return X_test_processed, y_test_processed, encoder, lb
@@ -103,4 +138,5 @@ def test_three():
     # Test the size of the train and test datasets
     assert len(X_train) == 80, f"Expected X_train to have 80 rows, but got {len(X_train)}"
     assert len(X_test) == 20, f"Expected X_test to have 20 rows, but got {len(X_test)}"
+
 

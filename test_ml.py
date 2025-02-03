@@ -36,7 +36,7 @@ def test_one():
 
     preds = inference(model, X_train_processed)
 
-    assert isinstance(preds, np.ndarray),
+    assert isinstance(preds, np.ndarray)
 
     assert preds.shape == y_train_processed,
 

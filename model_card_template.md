@@ -3,7 +3,7 @@
 For additional information see the Model Card paper: https://arxiv.org/pdf/1810.03993.pdf
 
 ## Model Details
-This is a Machine Learning Adult income prediction model based on income that exceeds $50K/yr. This model was created using Census Data from 1994 from ages 16-100 and formed through Scikit-learn. Through modeling, it is designed to predict whether an individuals demographic or employment data effect their income exceeding $50k per year. Logistic regression is used to categorize individuals and features demographic data such as age, education level, marital status, occupations, and hours worked per week.
+This is a Machine Learning Adult income prediction model based on income that exceeds $50K/yr. This model was created using Census Data from 1994 from ages 16-100 and formed through Scikit-learn. Through modeling, it is designed to predict whether an individuals demographic or employment data effect their income exceeding $50k per year. RandomForestClassifer is used to categorize individuals and features demographic data such as age, education level, marital status, occupations, and hours worked per week.
 Link: (https://archive.ics.uci.edu/dataset/20/census+income)
 
 ## Intended Use

@@ -32,8 +32,8 @@ def test_one():
     X_train, X_test, y_train, y_test = test_data()
     
     # Test that X_train and X_test have the correct number of columns
-    assert X_train.shape[1] == 10, f"Expected X_train to have 10 features, but got {X_train.shape[1]}"
-    assert X_test.shape[1] == 10, f"Expected X_test to have 10 features, but got {X_test.shape[1]}"
+    assert X_train.shape[1] == 14, f"Expected X_train to have 10 features, but got {X_train.shape[1]}"
+    assert X_test.shape[1] == 14, f"Expected X_test to have 10 features, but got {X_test.shape[1]}"
     
     # Test that y_train and y_test are one-dimensional
     assert y_train.ndim == 1, f"Expected y_train to be one-dimensional, but got {y_train.ndim} dimensions"

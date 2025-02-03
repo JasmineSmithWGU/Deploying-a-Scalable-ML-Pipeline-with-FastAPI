@@ -11,7 +11,6 @@ from ml.model import (
     train_model,
 )
 # TODO: load the cencus.csv data
-model = RandomForestClassifer()
 project_path = os.getcwd()
 data_path = os.path.join(project_path, "data", "census.csv")
 print(data_path)

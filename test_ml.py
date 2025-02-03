@@ -1,38 +1,3 @@
-from sklearn.preprocessing import LabelEncoder
-import pandas as pd
-from sklearn.preprocessing import LabelBinarizer
-
-def process_data(df, categorical_features, label, encoder=None, lb=None, training=True):
-    """Process the data by encoding categorical features and scaling numerical features."""
-    
-    # Label encoding for categorical features
-    if encoder is None and training:
-        encoder = {}  # Initialize encoder dict for the training phase
-        for feature in categorical_features:
-            le = LabelEncoder()
-            df[feature] = le.fit_transform(df[feature])  # Label encode the feature
-            encoder[feature] = le  # Store the encoder for future use
-    elif not training:  # For inference, use pre-trained encoders
-        for feature in categorical_features:
-            df[feature] = encoder[feature].transform(df[feature])  # Transform using the stored encoder
-
-    # Separate features (X) and target (y)
-    y = df[label]
-    X = df.drop(columns=[label])
-
-    # Apply label binarization (if needed)
-    if lb is None and training:
-        lb = LabelBinarizer()
-        y = lb.fit_transform(y)  # Apply binarization to the labels
-    elif not training:
-        y = lb.transform(y)  # Transform labels using the stored label binarizer
-
-    return X, y, encoder, lb
-Adjustments to the Test Code
-Ensure that all relevant categorical features are passed to process_data. Here's how the test should look now, assuming occupation is a categorical feature in your dataset:
-
-python
-Copy
 import pytest
 import numpy as np
 import pandas as pd

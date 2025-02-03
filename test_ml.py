@@ -58,6 +58,13 @@ def setup_test_data(setup_data):
     
     return X_test_processed, y_test_processed, encoder, lb
 
+# Modified train_model function to use LogisticRegression
+def train_model(X_train, y_train):
+    """Train a machine learning model (LogisticRegression in this case)."""
+    model = LogisticRegression(random_state=42)
+    model.fit(X_train, y_train)
+    return model
+
 # Test 1: Test model predictions
 def test_one(setup_data):
     """Test model type"""
@@ -83,7 +90,7 @@ def test_two(setup_data):
     # Train the model
     model = train_model(X_train_processed, y_train_processed)
     
-    # Test if the model is of expected type (e.g., LogisticRegression)
+    # Test if the model is of expected type (LogisticRegression)
     assert isinstance(model, LogisticRegression), f"Expected model of type LogisticRegression, got {type(model)}"
 
 # Test 3: Test data processing
@@ -104,8 +111,6 @@ def test_three():
     assert len(X_train) == 80, f"Expected X_train to have 80 rows, but got {len(X_train)}"
     assert len(X_test) == 20, f"Expected X_test to have 20 rows, but got {len(X_test)}"
 
-
 if __name__ == '__main__':
     pytest.main()
-
 

@@ -48,8 +48,8 @@ if __name__ == '__main':
 
 # TODO: implement the second test. Change the function name and input as needed
 def test_two():
-        def test_train_model():
-    """Test the type of the model returned by the training function."""
+    def test_train_model():
+     """Test the type of the model returned by the training function."""
     # Load data and split into train/test
     X_train, _, y_train, _ = test_data()
 
@@ -70,7 +70,7 @@ def test_two():
 def test_three():
     def test_data_processing():
     # Load data and split into train/test
-    X_train, X_test, y_train, y_test = test_data()
+     X_train, X_test, y_train, y_test = test_data()
 
     # Test that X_train and y_train are pandas DataFrames/Series
     assert isinstance(X_train, pd.DataFrame), f"Expected X_train to be a DataFrame, got {type(X_train)}"

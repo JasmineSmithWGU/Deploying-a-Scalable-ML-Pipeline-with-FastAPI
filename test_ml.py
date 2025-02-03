@@ -29,11 +29,11 @@ def test_one():
     """Test model type"""
 
     X_train, _, y_train, _ = test_data()
-
+    train = pd.concat([X_train, y_train], axis=1)
     # Process the data
     # Make sure 'categorical_features' is correctly passed as a keyword argument
     X_train_processed, y_train_processed, encoder, lb = process_data(
-        X_train, y_train, categorical_features=['workclass', 'education', 'marital-status'], label='salary'
+       train, categorical_features=['workclass', 'education', 'marital-status'], label='salary'
     )
 
     # Train the model

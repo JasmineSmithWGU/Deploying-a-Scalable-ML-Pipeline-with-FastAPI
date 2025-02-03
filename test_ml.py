@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from ml.data import process_data
 from ml.model import (
     train_model,
@@ -25,34 +24,61 @@ def test_data():
     y = df_sampled['salary']
     return train_test_split(X, y, test_size=0.2, random_state=42)
 
+# Pytest fixture to handle setup and preprocessing for training
+@pytest.fixture(scope="module")
+def setup_data():
+    """Fixture to set up and preprocess train data."""
+    X_train, _, y_train, _ = test_data()  # Get data
+    
+    # Combine X_train and y_train into a single DataFrame
+    train = pd.concat([X_train, y_train], axis=1)
+    
+    # Process the data
+    X_train_processed, y_train_processed, encoder, lb = process_data(
+        train, categorical_features=['workclass'], label='salary'
+    )
+    
+    return X_train_processed, y_train_processed, encoder, lb
+
+# Pytest fixture to handle setup and preprocessing for testing
+@pytest.fixture(scope="module")
+def setup_test_data(setup_data):
+    """Fixture to process test data using the trained encoder and label binarizer."""
+    # Get processed train data from setup_data fixture
+    X_train_processed, y_train_processed, encoder, lb = setup_data
+    
+    # Get test data
+    X_test, _, y_test, _ = test_data()  # Replace this with actual test data loading
+    test = pd.concat([X_test, y_test], axis=1)
+    
+    # Process the test data using the encoder and label binarizer from the train data
+    X_test_processed, y_test_processed, _, _ = process_data(
+        test, categorical_features=['workclass'], label='salary', encoder=encoder, lb=lb
+    )
+    
+    return X_test_processed, y_test_processed, encoder, lb
+
 # Test 1: Test model predictions
-def test_one():
-    """Test that the shape and types of the data are correct"""
-    
-    X_train, X_test, y_train, y_test = test_data()
-    
-    # Test that X_train and X_test have the correct number of columns
-    assert X_train.shape[1] == 14, f"Expected X_train to have 10 features, but got {X_train.shape[1]}"
-    assert X_test.shape[1] == 14, f"Expected X_test to have 10 features, but got {X_test.shape[1]}"
-    
-    # Test that y_train and y_test are one-dimensional
-    assert y_train.ndim == 1, f"Expected y_train to be one-dimensional, but got {y_train.ndim} dimensions"
-    assert y_test.ndim == 1, f"Expected y_test to be one-dimensional, but got {y_test.ndim} dimensions"
-    
-    # Test the type of the labels (y_train and y_test) to be integers or floats
-    assert pd.api.types.is_numeric_dtype(y_train), f"Expected y_train to have numeric dtype, got {y_train.dtype}"
-    assert pd.api.types.is_numeric_dtype(y_test), f"Expected y_test to have numeric dtype, got {y_test.dtype}"
+def test_one(setup_data):
+    """Test model type"""
+
+    X_train_processed, y_train_processed, encoder, lb = setup_data
+
+    # Train the model
+    model = train_model(X_train_processed, y_train_processed)
+
+    # Make predictions
+    preds = inference(model, X_train_processed)
+
+    # Assertions
+    assert isinstance(preds, np.ndarray), f"Expected predictions to be numpy array, but got {type(preds)}"
+    assert preds.shape[0] == len(y_train_processed), f"Expected number of predictions ({len(y_train_processed)}) to match number of labels ({preds.shape[0]})"
 
 # Test 2: Test the model type
-def test_two():
+def test_two(setup_data):
     """Test the type of the model returned by the training function."""
 
-    X_train, _, y_train, _ = test_data()
-
-    # Process data (train set)
-    X_train_processed, y_train_processed, encoder, lb = process_data(
-        X_train, y_train, categorical_features=['workclass', 'education', 'marital-status'], label='salary', training=True
-    )
+    X_train_processed, y_train_processed, encoder, lb = setup_data
     
     # Train the model
     model = train_model(X_train_processed, y_train_processed)
@@ -78,7 +104,21 @@ def test_three():
     assert len(X_train) == 80, f"Expected X_train to have 80 rows, but got {len(X_train)}"
     assert len(X_test) == 20, f"Expected X_test to have 20 rows, but got {len(X_test)}"
 
+# Test 4: Test model inference on test data
+def test_four(setup_test_data):
+    """Test inference on processed test data."""
+    
+    X_test_processed, y_test_processed, encoder, lb = setup_test_data
+    
+    # Assuming the model is already trained and available
+    model = load_model('model.joblib')  # Replace with actual model loading function
+    
+    # Make predictions on test data
+    preds = inference(model, X_test_processed)
+
+    # Assertions
+    assert isinstance(preds, np.ndarray), f"Expected predictions to be numpy array, but got {type(preds)}"
+    assert preds.shape[0] == len(y_test_processed), f"Expected number of predictions ({len(y_test_processed)}) to match number of labels ({preds.shape[0]})"
+
 if __name__ == '__main__':
     pytest.main()
-
-

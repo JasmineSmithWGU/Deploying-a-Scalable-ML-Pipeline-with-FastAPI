@@ -76,9 +76,7 @@ for col in cat_features:
     # iterate through the unique values in one categorical feature
     for slicevalue in sorted(test[col].unique()):
         count = test[test[col] == slicevalue].shape[0]
-        slice_data = test[test[col] == slicevalue].shape[0]
         p, r, fb = performance_on_categorical_slice(
-            slice_data,
             test,
             col,
             slice_value = slicevalue,

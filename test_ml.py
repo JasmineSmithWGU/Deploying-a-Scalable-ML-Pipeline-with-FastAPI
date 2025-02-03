@@ -48,7 +48,7 @@ if __name__ == '__main':
 
 # TODO: implement the second test. Change the function name and input as needed
 def test_two():
-    def test_train_model():
+        def test_train_model():
     """Test the type of the model returned by the training function."""
     # Load data and split into train/test
     X_train, _, y_train, _ = test_data()

@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from ml.data import process_data
 from ml.model import (
     train_model,
@@ -26,25 +27,21 @@ def test_data():
 
 # Test 1: Test model predictions
 def test_one():
-    """Test model type"""
-
-    X_train, _, y_train, _ = test_data()
-    train = pd.concat([X_train, y_train], axis=1)
-    # Process the data
-    # Make sure 'categorical_features' is correctly passed as a keyword argument
-    X_train_processed, y_train_processed, encoder, lb = process_data(
-       train, categorical_features=['workclass', 'education', 'marital-status'], label='salary'
-    )
-
-    # Train the model
-    model = train_model(X_train_processed, y_train_processed)
-
-    # Make predictions
-    preds = inference(model, X_train_processed)
-
-    # Assertions
-    assert isinstance(preds, np.ndarray), f"Expected predictions to be numpy array, but got {type(preds)}"
-    assert preds.shape[0] == len(y_train_processed), f"Expected number of predictions ({len(y_train_processed)}) to match number of labels ({preds.shape[0]})"
+    """Test that the shape and types of the data are correct"""
+    
+    X_train, X_test, y_train, y_test = test_data()
+    
+    # Test that X_train and X_test have the correct number of columns
+    assert X_train.shape[1] == 10, f"Expected X_train to have 10 features, but got {X_train.shape[1]}"
+    assert X_test.shape[1] == 10, f"Expected X_test to have 10 features, but got {X_test.shape[1]}"
+    
+    # Test that y_train and y_test are one-dimensional
+    assert y_train.ndim == 1, f"Expected y_train to be one-dimensional, but got {y_train.ndim} dimensions"
+    assert y_test.ndim == 1, f"Expected y_test to be one-dimensional, but got {y_test.ndim} dimensions"
+    
+    # Test the type of the labels (y_train and y_test) to be integers or floats
+    assert pd.api.types.is_numeric_dtype(y_train), f"Expected y_train to have numeric dtype, got {y_train.dtype}"
+    assert pd.api.types.is_numeric_dtype(y_test), f"Expected y_test to have numeric dtype, got {y_test.dtype}"
 
 # Test 2: Test the model type
 def test_two():

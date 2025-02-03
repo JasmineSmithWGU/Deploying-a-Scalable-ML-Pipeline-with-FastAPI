@@ -38,7 +38,7 @@ def test_one():
 
     assert isinstance(preds, np.ndarray)
 
-    assert preds.shape == y_train_processed,
+    assert preds.shape == y_train_processed
 
 if __name__ == '__main':
     pytest.main()

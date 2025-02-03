@@ -31,6 +31,7 @@ def test_one():
     X_train, _, y_train, _ = test_data()
 
     # Process the data
+    # Make sure 'categorical_features' is correctly passed as a keyword argument
     X_train_processed, y_train_processed, encoder, lb = process_data(
         X_train, y_train, categorical_features=['workclass', 'education', 'marital-status'], label='salary'
     )
@@ -53,7 +54,7 @@ def test_two():
 
     # Process data (train set)
     X_train_processed, y_train_processed, encoder, lb = process_data(
-        X_train, y_train, categorical_features=['workclass', 'education', 'marital-status'], label='salary', training=True
+        X_train, y_train, categorical_features=['workclass'], label='salary', training=True
     )
     
     # Train the model

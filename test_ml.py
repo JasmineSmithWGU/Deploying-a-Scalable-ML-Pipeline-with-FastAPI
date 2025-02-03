@@ -12,11 +12,11 @@ from ml.model import (
     load_model
 )
 
-# Load raw data
+#Load raw data for test dataset
 def rawdata():
     return pd.read_csv("data/census.csv")
 
-# Sample data and split
+#Sample and split data
 def test_data():
     df = pd.read_csv("data/census.csv")
     df_sampled = df.sample(100)
@@ -24,7 +24,7 @@ def test_data():
     y = df_sampled['salary']
     return train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Pytest fixture to handle setup and preprocessing for training
+# Setup and preprocess
 @pytest.fixture(scope="module")
 def setup_data():
     """Fixture to set up and preprocess train data."""
@@ -40,7 +40,7 @@ def setup_data():
     
     return X_train_processed, y_train_processed, encoder, lb
 
-# Pytest fixture to handle setup and preprocessing for testing
+
 @pytest.fixture(scope="module")
 def setup_test_data(setup_data):
     """Fixture to process test data using the trained encoder and label binarizer."""
@@ -58,7 +58,6 @@ def setup_test_data(setup_data):
     
     return X_test_processed, y_test_processed, encoder, lb
 
-# Modified train_model function to use LogisticRegression
 def train_model(X_train, y_train):
     """Train a machine learning model (LogisticRegression in this case)."""
     model = LogisticRegression(random_state=42)

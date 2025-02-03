@@ -35,7 +35,7 @@ def setup_data():
     
     # Process the data (include all relevant categorical features)
     X_train_processed, y_train_processed, encoder, lb = process_data(
-        train, categorical_features=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'native-country'], label='salary'
+        train, categorical_features=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'native-country', 'sex'], label='salary'
     )
     
     return X_train_processed, y_train_processed, encoder, lb
@@ -53,7 +53,7 @@ def setup_test_data(setup_data):
     
     # Process the test data using the encoder and label binarizer from the train data
     X_test_processed, y_test_processed, _, _ = process_data(
-        test, categorical_features=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'native-country'], label='salary', encoder=encoder, lb=lb, training=False
+        test, categorical_features=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'native-country', 'sex'], label='salary', encoder=encoder, lb=lb, training=False
     )
     
     return X_test_processed, y_test_processed, encoder, lb
@@ -103,6 +103,7 @@ def test_three():
     # Test the size of the train and test datasets
     assert len(X_train) == 80, f"Expected X_train to have 80 rows, but got {len(X_train)}"
     assert len(X_test) == 20, f"Expected X_test to have 20 rows, but got {len(X_test)}"
+
 
 if __name__ == '__main__':
     pytest.main()

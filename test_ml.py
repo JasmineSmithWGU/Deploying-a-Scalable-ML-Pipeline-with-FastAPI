@@ -53,7 +53,7 @@ def setup_test_data(setup_data):
     
     # Process the test data using the encoder and label binarizer from the train data
     X_test_processed, y_test_processed, _, _ = process_data(
-        test, categorical_features=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex','capital_gain', 'capital_loss', 'hours_per_week', 'native_country', label='salary', encoder=encoder, lb=lb, training=False
+        test, categorical_features=['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex','capital_gain', 'capital_loss', 'hours_per_week', 'native_country'], label='salary', encoder=encoder, lb=lb, training=False
     )
     
     return X_test_processed, y_test_processed, encoder, lb
